@@ -1,14 +1,25 @@
-    function x = CallNewton(TargMoms, x0, tolerance, trunc)
+    function [x, counts ] = CallNewton(TargMoms, x0, tolerance, trunc, maxIntermedSteps, maxiters)
+    
+    
+    if nargin<6
+        maxiters = 25;
+    end
+    
+    if nargin<5
+        maxIntermedSteps = 15;
+    end
     
     if nargin<4
-        trunc = 50;
+        trunc = 30;
     end
+    
+    
     
     FinalTarget = TargMoms;
     needtosolve = true;
     x0Orig = x0;
 
-    y0 = MomsAndJacobianFlexi(x0, trunc);  
+    y0 = MomsAndJacobianFlexi(x0);  
     yTarg = FinalTarget;   
     isFinalTarget = true;
     movingPointCount = 0; 
@@ -16,11 +27,12 @@
     % movingPointCount ensures this is only attempted a finite number of
     % times
 
-
-    while (needtosolve && movingPointCount<200)
-        x = Newton(yTarg,x0, tolerance);
-        needtosolve = any(isnan(x)) | ~isFinalTarget;
-        if isnan(x) % i.e. Newton's method failed
+    while (needtosolve && movingPointCount<maxIntermedSteps)
+        [x, xbest, tolreached, NewtCount] =   NewtonStore(yTarg,x0, tolerance,trunc, maxiters, 45);
+%     disp(NewtCount);
+        
+        needtosolve = any(isnan(x)) | ~isFinalTarget | ~tolreached;
+        if any(isnan(x)) | ~tolreached% i.e. Newton's method failed
             yTarg = (y0+yTarg)/2; % Bring target closer to known values
             isFinalTarget = false;
             movingPointCount = movingPointCount + 1;
@@ -35,8 +47,11 @@
     end
     
     if any(isnan(x))
-        x = x0Orig;
-        disp(['Orig x0 returned after ', num2str(movingPointCount), ' iterations']);
+        if any(isnan(xbest))
+            x = x0Orig;
+        else
+            x = xbest;
+        end
     end
-        
+        counts = [movingPointCount, NewtCount];
     end

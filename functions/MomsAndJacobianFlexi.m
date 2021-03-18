@@ -5,7 +5,7 @@ function [moms, J] = MomsAndJacobianFlexi(K1K2Psi, trunc, GetLoc)
 % If called with two outputs, returns the Jacobian of the transformation
 % between moments and GvM parameters (for Newtonian iteration)
 
-if nargin < 2
+    if nargin < 2
         trunc = 50;
     end
     

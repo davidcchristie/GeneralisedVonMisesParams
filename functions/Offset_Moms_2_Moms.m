@@ -4,7 +4,7 @@ function a1b1a2b2 = Offset_Moms_2_Moms(t0m1m2n2)
         t0m1m2n2 = t0m1m2n2';
     end
 
-    if size(t0m1m2n2,2)==4
+    if size(t0m1m2n2,2)>=4
             t0 = t0m1m2n2(:,1);
         else
             t0 = zeros(size(t0m1m2n2,1), 1);

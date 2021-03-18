@@ -1,4 +1,4 @@
-function  [F0_K1mu1_K2mu2, Errs] = Offset_Moms_2_GvM_Parameters(TargSpecMoms, tolerance, trunc)
+function  [F0_K1mu1_K2mu2, Errs, IterCounts] = Offset_Moms_2_GvM_Parameters(TargSpecMoms, tolerance, trunc)
 
 
 % Takes moment list in the form [...(PSD) (MWD(rads)), m1, m2, n2]
@@ -40,7 +40,7 @@ end
     OKParams = ~isnan(prod(TargCentredMoms, 2));
 
     [GvMParamsRel, InitialK1K2Psi,GvMLocsD0, Errs] = deal(NaN(size(TargCentredMoms)));
-
+    IterCounts = zeros(size(TargCentredMoms,1), 2);
     
 
         
@@ -52,9 +52,9 @@ end
     for fn = 1:size(TargCentredMoms,1)
         
        if OKParams(fn)
-           GvMParamsRel(fn,:) = CallNewton(TargCentredMoms(fn,:), InitialK1K2Psi(fn,:), tolerance, trunc);
+           [GvMParamsRel(fn,:), IterCounts(fn,:)] = CallNewton(TargCentredMoms(fn,:), InitialK1K2Psi(fn,:), tolerance, trunc);
            GvMLocsD0(fn,:) = MomsAndJacobianFlexi(GvMParamsRel(fn,:), trunc, true); % returns location params
-           if nargout == 2
+           if nargout >= 2
                Errs(fn,:) = MomsAndJacobianFlexi(GvMParamsRel(fn,:))-TargCentredMoms(fn,:);
            end
        end

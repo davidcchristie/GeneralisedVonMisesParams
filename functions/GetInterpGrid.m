@@ -11,11 +11,11 @@ function  SI = GetInterpGrid(createNew)
         load(gridFilename, 'SI');
     else
         
-    kappa12vec = [0.1:0.1:2, 2.25:0.25:8, 8.5: 0.5, 25];
+
+    kappa12vec = [0.1:0.1:2, 2.25:0.25:8, 8.5: 0.5, 35];
     psiVec = linspace(-pi/2,pi/2,90);
-    
-    startGrid = MomsAndJacobianFlexi( {kappa12vec, kappa12vec, psiVec},25);
-    InterpType = 'nearest';
+    startGrid = MomsAndJacobianFlexi( {kappa12vec, kappa12vec, psiVec},40);
+    InterpType ='nearest';%'natural'; % 'linear'; %'natural'; 
     SI = cell(3,1);
     disp('Generating Grid');
     for n = 1:3
