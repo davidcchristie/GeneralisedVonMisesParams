@@ -6,7 +6,7 @@ function a1_b1_a2_b2 = params2moms(A_kap1_mu1_kap2_mu2, trunc)
 % truncation term can be set using trunc.
 
 if nargin < 2 
-    trunc = 40;
+    trunc = 30;
 end
     
     addpath([pwd, filesep, 'functions']);
@@ -21,6 +21,5 @@ end
         mu1 = A_kap1_mu1_kap2_mu2(l,end-2);
         t0_m1_m2_n2(l,1) =  mu1-locsT0(1,1);
     end
-    
     a1_b1_a2_b2 = Offset_Moms_2_Moms(t0_m1_m2_n2);
 end

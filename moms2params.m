@@ -1,4 +1,4 @@
-function [A_kap1_mu1_kap2_mu2, Errs] = moms2params(a1_b1_a2_b2, tolerance, trunc)
+function [A_kap1_mu1_kap2_mu2, Errs, IterCounts] = moms2params(a1_b1_a2_b2, tolerance, trunc)
     
 %     Given the first two pairs of trig moments, returns the GvM
 %     parameters: A (divide by this to normalise), kappa1 (concentration
@@ -6,10 +6,10 @@ function [A_kap1_mu1_kap2_mu2, Errs] = moms2params(a1_b1_a2_b2, tolerance, trunc
 %     specify tolerance (or use 0.01 default value)
 %     
 
-    addpath([pwd, filesep, 'functions']);
+%     addpath([pwd, filesep, 'functions']);
 
 momsOK = KrogstadTest(a1_b1_a2_b2);
-
+    
 
 if any(~momsOK) 
     warning('Some supplied moments are not moments of a non-negative distribution: will return NaNs');
@@ -19,9 +19,9 @@ end
 
 
 if nargin < 3 
-    trunc = 40;
+    trunc = 30;
     if nargin<2
-        tolerance = 0.01;
+        tolerance = 0.001;
     end
 end
 
@@ -31,9 +31,13 @@ end
     t0_m1_m2_n2 = Moms_2_Offset_Moms(a1_b1_a2_b2);
 
     
-    
+    switch nargout
+        case 3
+    [A_kap1_mu1_kap2_mu2, Errs, IterCounts] = Offset_Moms_2_GvM_Parameters(t0_m1_m2_n2, tolerance, trunc);
+        case 2
     [A_kap1_mu1_kap2_mu2, Errs] = Offset_Moms_2_GvM_Parameters(t0_m1_m2_n2, tolerance, trunc);
-    
-
+        case 1
+    A_kap1_mu1_kap2_mu2 = Offset_Moms_2_GvM_Parameters(t0_m1_m2_n2, tolerance, trunc);
+    end
 
 end
