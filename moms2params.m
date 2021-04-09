@@ -6,7 +6,7 @@ function [A_kap1_mu1_kap2_mu2, Errs, IterCounts] = moms2params(a1_b1_a2_b2, tole
 %     specify tolerance (or use 0.01 default value)
 %     
 
-%     addpath([pwd, filesep, 'functions']);
+addpath([pwd, filesep, 'functions']);
 
 momsOK = KrogstadTest(a1_b1_a2_b2);
     
